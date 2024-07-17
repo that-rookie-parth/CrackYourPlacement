@@ -60,3 +60,6 @@ int main()
 
     return 0;
 }
+
+// TC: O(n*m)
+// SC: O(n) + O(m)
