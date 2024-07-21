@@ -1,43 +1,72 @@
-#include<iostream>
-#include<vector>
-#include<algorithm>
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
-class Solution {
+class Solution
+{
 public:
-    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+    vector<vector<int>> fourSum(vector<int> &nums, int target)
+    {
         int n = nums.size();
+
+        // base case
+        if (n < 4)
+            return {};
+
         sort(nums.begin(), nums.end());
-        vector<vector<int>> output;
-        for(int i=0; i<n-3; i++){
-            for(int j=i+1; j<n-2; j++){
-                long long newTarget = (long long)target - (long long)nums[i] - (long long)nums[j];
-                int low = j+1, high = n-1;
-                while(low < high){
-                    if(nums[low] + nums[high] < newTarget){
-                        low++;
+        vector<vector<int>> result;
+
+        for (int i = 0; i < n - 3; i++)
+        {
+            if (i > 0 && nums[i] == nums[i - 1])
+                continue;
+
+            int fix1 = nums[i];
+            long long p = target - fix1;
+            for (int j = i + 1; j < n - 2; j++)
+            {
+                if (j != i + 1 && nums[j] == nums[j - 1])
+                    continue;
+
+                int fix2 = nums[j];
+                long long q = p - fix2;
+
+                int x = j + 1;
+                int y = n - 1;
+
+                while (x < y)
+                {
+                    int sum = nums[x] + nums[y];
+                    if (sum == q)
+                    {
+                        result.push_back({nums[x], nums[y], nums[j], nums[i]});
+                        while (x < y && nums[x] == nums[x + 1])
+                            x++;
+                        while (x < y && nums[y] == nums[y - 1])
+                            y--;
+                        x++;
+                        y--;
                     }
-                    else if(nums[low] + nums[high] > newTarget){
-                        high--;
+                    else if (sum > q)
+                    {
+                        y--;
                     }
-                    else{
-                        output.push_back({nums[i], nums[j], nums[low], nums[high]});
-                        int tempIndex1 = low, tempIndex2 = high;
-                        while(low < high && nums[low] == nums[tempIndex1]) low++;
-                        while(low < high && nums[high] == nums[tempIndex2]) high--;
+                    else
+                    {
+                        x++;
                     }
                 }
-                while(j+1 < n && nums[j] == nums[j+1]) j++;
             }
-            while(i+1 < n && nums[i] == nums[i+1]) i++;
         }
-        return output;
+        return result;
     }
 };
 
-int main(){
-    vector<int> nums = {1,0,-1,0,-2,2};
+int main()
+{
+    vector<int> nums = {1, 0, -1, 0, -2, 2};
     int target = 0;
     vector<vector<int>> ans;
 
@@ -53,6 +82,9 @@ int main(){
         cout << endl;
     }
     cout << endl;
-    
+
     return 0;
 }
+
+// TC: O(N*N*N)
+// SC:O(1)
